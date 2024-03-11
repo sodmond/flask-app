@@ -1,21 +1,25 @@
 from flask import Flask
+import os
 from flask import redirect, url_for, jsonify, make_response, render_template, flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 from models import db, BlogPost
 from flask_migrate import Migrate
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dhh_eyeue3384743_383ht7'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite::///flaskdb.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite::///' + os.path.join(basedir, 'flaskdb.db')
 #app.config['SQLALCHEMY_DATABASE_URI'] = "mysql:://root:root@localhost:3306/flaskdb"
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-#db.init_app(app)
-#with app.app_context():
-#    db.create_all()
+db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 migrate = Migrate(app, db)
 
